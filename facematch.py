@@ -11,15 +11,16 @@ from PIL import Image, ImageDraw, ImageOps, ImageFont
 #import imagehash
 
 #%%
-st.title("*Face Match* :full_moon_with_face:")
 language = st.checkbox("Thai Language")
+st.title("*Face Match* :dart:")
+
 
 #%%
 if language:
-    t = ["**:point_right: อัพโหลดรูปภาพบุคคลที่คุณต้องการตรวจสอบความเหมือน**", #0
+    t = ["**:one: อัพโหลดรูปภาพบุคคลที่คุณต้องการเช็คความเหมือน**", #0
          "อัพโหลดรูปภาพที่หนึ่ง...",    #1
          "รูปภาพที่อัพโหลด",         #2
-         "**:point_right: จากนั้นอัพโหลดรูปภาพของคุณ**",  #3
+         "**:two: อัพโหลดรูปภาพที่ต้องการเปรียบเทียบ**",  #3
          "อัพโหลดรูปภาพที่สอง...",   #4
          "รูปภาพที่อัพโหลด",        #5
          "**:mag_right: ถึงเวลาเปรียบเทียบรูปภาพแล้ว**", #6
@@ -36,10 +37,10 @@ if language:
          ]
 
 else:
-     t= ["**:point_right: Upload an image you would like to compare with.**",  #0
+     t= ["**:one: Upload a person image you would like to check for similarity.**",  #0
         "Upload the 1st image...",      #1
         "Uploaded Image.",      #2
-        "**:point_right: Then, upload your image.**", #3
+        "**:two: Upload an image to compare.**", #3
         "Upload the 2nd image...",  #4
         "Uploaded Image.",  #5
         "**:mag_right: Now, it's time to compare.**",   #6
@@ -53,15 +54,16 @@ else:
         "In this area, 'Face distance' is the method which lets you know \
         the matching score between faces from the above 2 images. So, there will provide you the matching score of faces in image 2 compared to the first one.\
         Please try uploading the picture of several people in the second image and see the result.",    #11
-        "It seems to have {} people in your image." ,     #12
-        "**Matching Score of person {} is {}**" #13
-        ]     
+        "{} Face(s) detected in your image." ,     #12
+        "**Matching Score of Face {} is {}**" #13
+        ]
 
 st.write(t[0])  
 uploaded_file = st.file_uploader(t[1] , type=("png", "jpg","jpeg"))
 
+#video_file = open 
 #%%
-#@st.cache
+
 def findface(file):
     img = face_recognition.load_image_file(file)
     face_locations = face_recognition.face_locations(img, number_of_times_to_upsample=2)
@@ -69,6 +71,7 @@ def findface(file):
     return img, face_locations, face_encodings
 #%%
 if uploaded_file is not None:
+
     #Img1 
     image = Image.open(uploaded_file)
     image = ImageOps.exif_transpose(image) #rotate
@@ -76,14 +79,14 @@ if uploaded_file is not None:
     image.save('rotated.png')
     st.image(image, caption=t[2], use_column_width=True)  
     img1, known_locat ,known_encodings = findface('rotated.png')
-    
+
         
 #%%    
 st.write(t[3])  
 uploaded_file2 = st.file_uploader(t[4],  type=("png", "jpg","jpeg"))
 #%%
-if uploaded_file is not None and uploaded_file2 is not None:
-    #img2
+if uploaded_file2 is not None:
+    #Img2
     unknown_image = Image.open(uploaded_file2)
     unknown_image = ImageOps.exif_transpose(unknown_image) #rotate
     #unknown_image.thumbnail((2400,1600), Image.ANTIALIAS)
@@ -91,7 +94,18 @@ if uploaded_file is not None and uploaded_file2 is not None:
     st.image(unknown_image, caption=t[5], use_column_width=True)
     img2, unknown_locat, unknown_encodings = findface('rotated2.png')
     
-    
+if uploaded_file is not None and uploaded_file2 is not None:
+    #img2
+    #try:
+        
+        #unknown_image = Image.open(uploaded_file2)
+        #unknown_image = ImageOps.exif_transpose(unknown_image) #rotate
+        #unknown_image.thumbnail((2400,1600), Image.ANTIALIAS)
+        #unknown_image.save('rotated2.png')
+        #st.image(unknown_image, caption=t[5], use_column_width=True)
+        #img2, unknown_locat, unknown_encodings = findface('rotated2.png')
+            
+        
     pill_image = Image.fromarray(img2)
     font = ImageFont.truetype(".\ARLRDBD.TTF", 16)
     draw = ImageDraw.Draw(pill_image)
@@ -133,7 +147,8 @@ if uploaded_file is not None and uploaded_file2 is not None:
    
     del draw
     st.image(pill_image, use_column_width= True)
-    
+    #except IndexError:
+     #   st.write("Try again")
 #%%             
 st.text("Creator: Innovation lab | Kawisara N.")
 
