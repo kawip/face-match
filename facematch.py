@@ -55,7 +55,7 @@ LANG = {
     ],
 }
 
-
+#find face
 def predict_faces(img, number_of_times_to_upsample=1, num_jitters=1):
     img = np.array(img)
     face_locations = face_recognition.face_locations(
