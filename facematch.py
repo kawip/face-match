@@ -14,13 +14,13 @@ import numpy as np
 
 LANG = {
     "TH": [
-        "**:one: อัพโหลดรูปภาพบุคคลที่คุณต้องการเช็คความเหมือน**",  # 0
+        "**:one: อัพโหลดรูปหน้าของคนที่คุณต้องการเช็คความเหมือน ( 1 คนเท่านั้น)**",  # 0
         "อัพโหลดรูปภาพที่หนึ่ง...",  # 1
         "รูปภาพที่อัพโหลด",  # 2
-        "**:two: อัพโหลดรูปภาพที่ต้องการเปรียบเทียบ**",  # 3
+        "**:two: อัพโหลดรูปภาพหน้าที่ต้องการเปรียบเทียบ ( สามารถเปรียบเทียบได้มากกว่า 1 คน)**",  # 3
         "อัพโหลดรูปภาพที่สอง...",  # 4
         "รูปภาพที่อัพโหลด",  # 5
-        "**:mag_right: ถึงเวลาเปรียบเทียบรูปภาพแล้ว**",  # 6
+        "**:mag_right: ผลลัพธ์ของ FaceMatch**",  # 6
         "วิธีที่ใช้ในการเปรียบเทียบ:",  # 7
         "ดูคำอธิบายเพิ่มเติมของวิธีนี้",  # 8
         "ในที่นี้ 'Image hash' คือวิธีที่ถูกนำมาใช้ดูความเหมือนในภาพรวมของรูปภาพเท่านั้นว่าเหมือนหรือต่างกันมากน้อยเพียงใด\
@@ -33,13 +33,13 @@ LANG = {
         "**ใบหน้าของคนที่ {} มีความคล้ายกับใบหน้าของคนในภาพแรก {}**",  # 13
     ],
     "EN": [
-        "**:one: Upload a person image you would like to check for similarity.**",  # 0
+        "**:one:  Upload one face image that you would like to check for FaceMatch.**",  # 0
         "Upload the 1st image...",  # 1
         "Uploaded Image.",  # 2
-        "**:two: Upload an image to compare.**",  # 3
+        "**:two: Upload a picture of face images to compare.**",  # 3
         "Upload the 2nd image...",  # 4
         "Uploaded Image.",  # 5
-        "**:mag_right: Now, it's time to compare.**",  # 6
+        "**:mag_right: FaceMatch result.**",  # 6
         "Method of comparison:",  # 7
         "See more about method explanation.",  # 8
         "In this area, 'Image hash' is the method used to find the similarity \
@@ -84,7 +84,7 @@ def draw_boundingboxes(
         distance = face_recognition.face_distance(known_encodings, unknown_encodings)
         text_width, text_height = draw.textsize(
             "{:.2%}".format(1 - distance[0])
-        )  # "{:.2%}".format(1-distance[0])
+        )  
         draw.rectangle(
             ((left, bottom - text_height - 6), (right, bottom + 3)),
             fill=(0, 0, 0),
@@ -109,7 +109,7 @@ def render_loop():
         t = LANG["EN"]
 
     st.write(t[0])
-    uploaded_file = st.file_uploader(t[1], type=("png", "jpg", "jpeg"))
+    uploaded_file = st.file_uploader('', type=("png", "jpg", "jpeg"))
 
     if uploaded_file is not None:
         try:
@@ -120,7 +120,7 @@ def render_loop():
             st.text("loading/processing img1 failed")
 
     st.write(t[3])
-    uploaded_file2 = st.file_uploader(t[4], type=("png", "jpg", "jpeg"))
+    uploaded_file2 = st.file_uploader(' ', type=("png", "jpg", "jpeg"))
     if uploaded_file2 is not None:
         try:
             unknown_image = load_image_and_preprocess(uploaded_file2)
@@ -133,19 +133,16 @@ def render_loop():
         font = ImageFont.truetype("ARLRDBD.TTF", 16)
         draw = ImageDraw.Draw(unknown_image)
 
-        # choose method to compare
-        # method = ['Image hash', 'Face distance']
         st.write(t[6])
-        st.text(t[7] + "'Face Distance'")
+        #st.text(t[7] + "'Face Distance'")
         # select = st.selectbox(t[7], method)
-        agree = st.checkbox(t[8])
+        #agree = st.checkbox(t[8])
 
         # method 2 :
-        if agree:
-            st.write(
-                f'<div style="color: grey; font-size: small">{t[11]} </div>',
-                unsafe_allow_html=True,
-            )
+        #    st.write(
+        #        f'<div style="color: grey; font-size: small">{t[11]} </div>',
+        #        unsafe_allow_html=True,
+        #    )
         st.markdown(
             f'<div style="color: red; font-size: large-bold">{t[12].format(len(unknown_locat))} </div>',
             unsafe_allow_html=True,
@@ -156,7 +153,7 @@ def render_loop():
         del draw
         st.image(unknown_image, use_column_width=True)
 
-    st.text("Creator: Innovation lab | Kawisara N.")
+    st.text("Creator: Beyond SQM Lab | Kawisara N.")
 
 
 try:
